@@ -5,34 +5,195 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- 导入样式 -->
-    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/element-plus/dist/index.css"
+    />
     <!-- 导入 Vue 3 -->
     <script src="https://unpkg.com/vue@next"></script>
     <!-- 导入组件库 -->
     <script src="https://unpkg.com/element-plus"></script>
-    <title>Document</title>
+    <script src="https://cdn.staticfile.org/monaco-editor/0.19.3/min/vs/loader.min.js"></script>
+    <title>EzLittleChen Blog</title>
   </head>
   <body>
-    
     <div id="app">
-        <el-row justify="center">
-            <el-col :span="6">
-                <el-button>{{ message }}</el-button>
-            </el-col>
-        </el-row>
+      <el-row justify="center">
+        <h1>{{ topic }}</h1>
+      </el-row>
+      <!-- <el-row justify="center">
+        <el-button>{{ message }}</el-button>
+      </el-row> -->
+      <el-row justify="center">
+      <el-card class="box-card">
+        <template #header>
+          <div class="card-header">
+            <span>JavaScript</span>
+          </div>
+        </template>
+        <div id="js-editor"></div>
+      </el-card>
+      <el-card class="box-card">
+        <template #header>
+          <div class="card-header">
+            <span>C</span>
+          </div>
+        </template>
+        <div id="c-editor"></div>
+      </el-card>
+      <el-card class="box-card">
+        <template #header>
+          <div class="card-header">
+            <span>Python</span>
+          </div>
+        </template>
+        <div id="python-editor"></div>
+      </el-card>
+      <el-card class="box-card">
+        <template #header>
+          <div class="card-header">
+            <span>Golang</span>
+          </div>
+        </template>
+        <div id="go-editor"></div>
+      </el-card>
+      <!-- <el-card class="box-card" v-for="item in editorItems" :key="item.divId">
+        <template #header>
+          <div class="card-header">
+            <span>{{item.title}}</span>
+          </div>
+        </template>
+        <div id="{{item.divId}}"></div>
+      </el-card> -->
+    </el-row>
     </div>
 
     <script>
+      require.config({
+        paths: { vs: "https://cdn.staticfile.org/monaco-editor/0.19.3/min/vs" },
+      });
+
+      function createEditor(divId, language, value){
+        require(["vs/editor/editor.main"], function () {
+        this.editor = monaco.editor.create(
+          document.getElementById(divId),
+          {
+            language: language,
+            value: value,
+            fontSize: 14,
+            lineNumbers: true,
+            scrollBeyondLastLine: false,
+            theme: "vs-dark",
+            minimap: {
+              enabled: false,
+            },
+          }
+        );
+      });
+    }
       const App = {
         data() {
           return {
-            message: "Hello Element Plus",
+            editor: null,
+            topic: "EzLittleChen",
+            editorItems: [
+            {
+                title: "JavaScript",
+                divId: "js-editor",
+                language:"javascript",
+                value: `console.log("hello world");`,
+              },
+              {
+                title: "C",
+                divId: "c-editor",
+                language:"c",
+                value: `#include <stdio.h>
+
+int main() {
+  printf("hello world");
+  return 0;
+}`,
+              },
+              {
+                title: "python",
+                divId: "python-editor",
+                language:"python",
+                value: `print("hello world")`,
+              },
+              {
+                title: "golang",
+                divId: "go-editor",
+                language:"go",
+                value: `package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+var (
+	wg       sync.WaitGroup
+	rangeNum chan int = make(chan int, 0)
+)
+
+func init() {
+	fmt.Println("init")
+	go func() {
+		numList := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+		for _, num := range numList {
+
+			rangeNum <- num
+		}
+		close(rangeNum)
+	}()
+}
+
+func main() {
+	// 从rangeNum中读取数据
+	for num := range rangeNum {
+		wg.Add(1)
+		go func(num int) {
+			defer wg.Done()
+			oneProcess(num)
+		}(num)
+	}
+	wg.Wait()
+}
+
+func oneProcess(num int) {
+	fmt.Println(num)
+	time.Sleep(time.Microsecond * 100 * time.Duration(num))
+	fmt.Printf("sleep %d microseconds\n", num*100)
+}`
+              }
+            ]
           };
+        },
+        mounted() {
+          for (item in this.editorItems) {
+            // console.log(document.getElementById(this.editorItems[item].divId));
+            let lineNum = this.editorItems[item].value.split("\n").length;
+            document.getElementById(this.editorItems[item].divId).style.height = lineNum * 20 + "px";
+            // if (lineNum > 30){
+            //   document.getElementById(this.editorItems[item].divId).style.height = "600px";
+            // }
+            createEditor(this.editorItems[item].divId, this.editorItems[item].language, this.editorItems[item].value);
+          }
+        },
+        methods: {
+
         },
       };
       const app = Vue.createApp(App);
       app.use(ElementPlus);
       app.mount("#app");
     </script>
+    <style>
+      .box-card{
+        width: 50%;
+        margin-top: 30px;
+      }
+    </style>
   </body>
 </html>
