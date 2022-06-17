@@ -78,13 +78,15 @@
         this.editor = monaco.editor.create(
           document.getElementById(divId),
           {
-            language: language,
-            value: value,
-            fontSize: 14,
-            lineNumbers: true,
-            scrollBeyondLastLine: false,
-            theme: "github-light",
-            minimap: {
+            language: language, // 语言
+            value: value, // 初始值
+            fontSize: 14, // 字体大小
+            lineNumbers: true, // 显示行号
+            overviewRulerBorder: false, // 显示滚动条边框
+            scrollBeyondLastLine: false, // 滚动条滚到最底部
+            theme: "vs", // 官方自带三种主题vs, hc-black, or vs-dark
+            readOnly: true, // 只读
+            minimap: { // 小地图
               enabled: false,
             },
           }
