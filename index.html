@@ -25,39 +25,40 @@
         <el-button>{{ message }}</el-button>
       </el-row> -->
       <el-row justify="center">
-      <el-card class="box-card">
-        <template #header>
-          <div class="card-header">
-            <span>JavaScript</span>
-          </div>
-        </template>
-        <div id="js-editor"></div>
-      </el-card>
-      <el-card class="box-card">
-        <template #header>
-          <div class="card-header">
-            <span>C</span>
-          </div>
-        </template>
-        <div id="c-editor"></div>
-      </el-card>
-      <el-card class="box-card">
-        <template #header>
-          <div class="card-header">
-            <span>Python</span>
-          </div>
-        </template>
-        <div id="python-editor"></div>
-      </el-card>
-      <el-card class="box-card">
-        <template #header>
-          <div class="card-header">
-            <span>Golang</span>
-          </div>
-        </template>
-        <div id="go-editor"></div>
-      </el-card>
-      <!-- <el-card class="box-card" v-for="item in editorItems" :key="item.divId">
+        <el-col :xs="20" :sm="18" :md="16" :lg="14" :xl="10">
+          <el-card class="box-card">
+            <template #header>
+              <div class="card-header">
+                <span>JavaScript</span>
+              </div>
+            </template>
+            <div id="js-editor"></div>
+          </el-card>
+          <el-card class="box-card">
+            <template #header>
+              <div class="card-header">
+                <span>C</span>
+              </div>
+            </template>
+            <div id="c-editor"></div>
+          </el-card>
+          <el-card class="box-card">
+            <template #header>
+              <div class="card-header">
+                <span>Python</span>
+              </div>
+            </template>
+            <div id="python-editor"></div>
+          </el-card>
+          <el-card class="box-card">
+            <template #header>
+              <div class="card-header">
+                <span>Golang</span>
+              </div>
+            </template>
+            <div id="go-editor"></div>
+          </el-card>
+          <!-- <el-card class="box-card" v-for="item in editorItems" :key="item.divId">
         <template #header>
           <div class="card-header">
             <span>{{item.title}}</span>
@@ -65,7 +66,8 @@
         </template>
         <div id="{{item.divId}}"></div>
       </el-card> -->
-    </el-row>
+        </el-col>
+      </el-row>
     </div>
 
     <script>
@@ -73,11 +75,9 @@
         paths: { vs: "https://cdn.staticfile.org/monaco-editor/0.19.3/min/vs" },
       });
 
-      function createEditor(divId, language, value){
+      function createEditor(divId, language, value) {
         require(["vs/editor/editor.main"], function () {
-        this.editor = monaco.editor.create(
-          document.getElementById(divId),
-          {
+          this.editor = monaco.editor.create(document.getElementById(divId), {
             language: language, // 语言
             value: value, // 初始值
             fontSize: 14, // 字体大小
@@ -86,29 +86,29 @@
             scrollBeyondLastLine: false, // 滚动条滚到最底部
             theme: "vs", // 官方自带三种主题vs, hc-black, or vs-dark
             readOnly: true, // 只读
-            minimap: { // 小地图
+            minimap: {
+              // 小地图
               enabled: false,
             },
-          }
-        );
-      });
-    }
+          });
+        });
+      }
       const App = {
         data() {
           return {
             editor: null,
             topic: "EzLittleChen",
             editorItems: [
-            {
+              {
                 title: "JavaScript",
                 divId: "js-editor",
-                language:"javascript",
+                language: "javascript",
                 value: `console.log("hello world");`,
               },
               {
                 title: "C",
                 divId: "c-editor",
-                language:"c",
+                language: "c",
                 value: `#include <stdio.h>
 
 int main() {
@@ -119,13 +119,13 @@ int main() {
               {
                 title: "python",
                 divId: "python-editor",
-                language:"python",
+                language: "python",
                 value: `print("hello world")`,
               },
               {
                 title: "golang",
                 divId: "go-editor",
-                language:"go",
+                language: "go",
                 value: `package main
 
 import (
@@ -166,34 +166,37 @@ func main() {
 func oneProcess(num int) {
 	fmt.Println(num)
 	time.Sleep(time.Microsecond * 100 * time.Duration(num))
-	fmt.Printf("sleep %d microseconds\\n", num*100)
-}`
-              }
-            ]
+	fmt.Printf("sleep %d microseconds\\n", num * 100)
+}`,
+              },
+            ],
           };
         },
         mounted() {
           for (item in this.editorItems) {
             // console.log(document.getElementById(this.editorItems[item].divId));
             let lineNum = this.editorItems[item].value.split("\n").length;
-            document.getElementById(this.editorItems[item].divId).style.height = lineNum * 20 + "px";
-            // if (lineNum > 30){
-            //   document.getElementById(this.editorItems[item].divId).style.height = "600px";
-            // }
-            createEditor(this.editorItems[item].divId, this.editorItems[item].language, this.editorItems[item].value);
+            document.getElementById(this.editorItems[item].divId).style.height =
+              lineNum * 20 + "px";
+            const maxLength = 50
+            if (lineNum > maxLength){
+              document.getElementById(this.editorItems[item].divId).style.height = maxLength * 20 + "px";
+            }
+            createEditor(
+              this.editorItems[item].divId,
+              this.editorItems[item].language,
+              this.editorItems[item].value
+            );
           }
         },
-        methods: {
-
-        },
+        methods: {},
       };
       const app = Vue.createApp(App);
       app.use(ElementPlus);
       app.mount("#app");
     </script>
     <style>
-      .box-card{
-        width: 50%;
+      .box-card {
         margin-top: 30px;
       }
     </style>
