@@ -111,8 +111,15 @@
                 language: "c",
                 value: `#include <stdio.h>
 
-int main() {
-  printf("hello world");
+void main() {
+  int i = 1;
+  int *p;
+  p = &i;
+  printf("%d\\n", *p);
+  
+  char str[] = "Hello World";
+  char *pstr = str;
+  printf("%s\\n", pstr);
   return 0;
 }`,
               },
@@ -142,8 +149,8 @@ var (
 func init() {
 	fmt.Println("init")
 	go func() {
-		numList := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-		for _, num := range numList {
+		numList := &[]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+		for _, num := range *numList {
 
 			rangeNum <- num
 		}
@@ -155,18 +162,18 @@ func main() {
 	// 从rangeNum中读取数据
 	for num := range rangeNum {
 		wg.Add(1)
-		go func(num int) {
+		go func(num *int) {
 			defer wg.Done()
 			oneProcess(num)
-		}(num)
+		}(&num)
 	}
 	wg.Wait()
 }
 
-func oneProcess(num int) {
-	fmt.Println(num)
-	time.Sleep(time.Microsecond * 100 * time.Duration(num))
-	fmt.Printf("sleep %d microseconds\\n", num * 100)
+func oneProcess(num *int) {
+	fmt.Println(*num)
+	time.Sleep(time.Microsecond * 100 * time.Duration(*num))
+	fmt.Printf("sleep %d microseconds\n", *num * 100)
 }`,
               },
             ],
