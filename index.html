@@ -201,11 +201,11 @@ WHERE
 		from
 			asset_tag
 		where
-			tag_name in (?))
+			tag_name in ("tag1", "tag2"))
 	GROUP BY
 		server_id
 	HAVING
-		COUNT(server_id) = ?)
+		COUNT(server_id) = 2)
 	AND is_deleted = 0`,
               },
             ],
