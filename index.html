@@ -85,13 +85,40 @@ void main() {
 }`,
               },
               {
-                title: "python",
+                title: "Python",
                 divId: "pythonEditor",
                 language: "python",
                 value: `print("hello world")`,
               },
               {
-                title: "golang",
+                title: "Shell",
+                divId: "shellEditor",
+                language: "shell",
+                value: `#!/bin/bash
+
+function oneProcess(){
+    num=$1
+    sleep $num
+    echo $num
+}
+
+function mainProcess(){
+
+    for i in {1..5};
+    do
+    {
+        echo main $i
+        oneProcess $i
+    } &
+    done
+    echo mainProcess done
+}
+
+mainProcess
+wait`,
+              },
+              {
+                title: "Golang",
                 divId: "goEditor",
                 language: "go",
                 value: `package main
@@ -136,6 +163,50 @@ func oneProcess(num *int) {
 	time.Sleep(time.Microsecond * 100 * time.Duration(*num))
 	fmt.Printf("sleep %d microseconds\\n", *num * 100)
 }`,
+              },
+              {
+                title: "SQL",
+                divId: "sqlEditor",
+                language: "sql",
+                value: `/*推荐工具: https://github.com/liyupi/sql-generator*/
+
+SELECT 
+	asset_server.id,
+	asset_server.instance_id,
+	hostname,
+	public_ip,
+	private_ip,
+	idc,
+	region,
+	tags,
+	asset_server.update_time,
+	os_type,
+	instance_state,
+	instance_charge_type
+FROM
+	asset_server
+LEFT JOIN asset_server_detail ON
+	asset_server.instance_id = asset_server_detail.instance_id
+WHERE
+	asset_server.instance_id IN
+                (
+	SELECT
+		server_id
+	FROM
+		asset_server_tag
+	WHERE
+		tag_id IN (
+		select
+			asset_tag.id
+		from
+			asset_tag
+		where
+			tag_name in (?))
+	GROUP BY
+		server_id
+	HAVING
+		COUNT(server_id) = ?)
+	AND is_deleted = 0`,
               },
             ],
           };
