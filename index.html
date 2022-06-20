@@ -126,7 +126,37 @@ void main() {
                 title: "Python",
                 divId: "pythonEditor",
                 language: "python",
-                value: `print("hello world")`,
+                value: `from flask import Flask, request
+import json
+import logging
+from logging.handlers import RotatingFileHandler
+import os
+
+app = Flask(__name__)
+
+if not os.path.exists('./logs'):
+    os.makedirs('./logs')
+# 配置日志记录器
+file_log_handler = RotatingFileHandler('logs/noticeMiddle.log', maxBytes=1024 * 1024, backupCount=10, encoding='utf-8')
+logging_format = logging.Formatter(
+    '%(asctime)s - %(levelname)s - %(filename)s - %(funcName)s - %(lineno)s - %(message)s')
+# file_log_handler.setLevel(logging.DEBUG)
+# Logger级别默认为warning，虽然handler配置了setLevel，但是仍取两者之间最高级别的配置，需要通过下面方式调整级别
+logging.root.setLevel(logging.INFO)
+file_log_handler.setFormatter(logging_format)
+app.logger.addHandler(file_log_handler)
+
+@app.route('/', methods=['POST'])
+def send():
+    try:
+        data = json.loads(request.data)
+        return {"code": 200, "status": "ok", "msg": "success"}
+    except Exception as e:
+        app.logger.error(e)
+        return {"code": 500, "status": "error", "msg": "error"}
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080, debug=True)`,
               },
               {
                 title: "Shell",
@@ -206,7 +236,7 @@ func oneProcess(num *int) {
                 title: "SQL",
                 divId: "sqlEditor",
                 language: "sql",
-                value: `/*推荐工具: https://github.com/liyupi/sql-generator*/
+                value: `/* 推荐工具: https://github.com/liyupi/sql-generator */
 
 SELECT 
 	asset_server.id,
