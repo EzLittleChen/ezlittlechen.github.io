@@ -64,7 +64,45 @@
                 title: "JavaScript",
                 divId: "jsEditor",
                 language: "javascript",
-                value: `console.log("hello world");`,
+                value: `console.log("hello world");
+
+let func = () => {
+    setTimeout(function () {
+        console.log("1");
+        setTimeout(function () {
+            console.log("2");
+            setTimeout(function () {
+                console.log("3");
+            }, 3000);
+        }, 2000);
+    }, 1000);
+}
+
+func()
+
+let p = new Promise((resolve, reject) => {
+    setTimeout(function () {
+        console.log("1");
+    }, 1000)
+    if (true) {
+        resolve()
+    } else {
+        reject()
+    }
+})
+
+p.then(() => {
+    // 如果p的状态被resolve了，就进入这里
+    setTimeout(function () {
+        console.log("2");
+    }, 2000)
+}, () => {
+    // 如果p的状态被reject
+}).then(
+    setTimeout(function () {
+        console.log("3");
+    }, 3000)
+)`,
               },
               {
                 title: "C",
