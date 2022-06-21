@@ -1,4 +1,240 @@
-package main
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 导入样式 -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/element-plus/dist/index.css"
+    />
+    <!-- 导入 Vue 3 -->
+    <script src="https://unpkg.com/vue@next"></script>
+    <!-- 导入组件库 -->
+    <script src="https://unpkg.com/element-plus"></script>
+    <script src="https://cdn.staticfile.org/monaco-editor/0.19.3/min/vs/loader.min.js"></script>
+    <title>EzLittleChen Blog</title>
+  </head>
+  <body>
+    <div id="app">
+      <el-row justify="center">
+        <h1 ref="topic">{{ topic }}</h1>
+      </el-row>
+      <!-- <el-row justify="center">
+        <el-button>{{ message }}</el-button>
+      </el-row> -->
+      <el-row justify="center">
+        <el-col :xs="22" :sm="18" :md="16" :lg="14" :xl="10">
+          <!-- <el-card class="box-card">
+            <template #header>
+              <div class="card-header">
+                <span>JavaScript</span>
+              </div>
+            </template>
+            <div id="jsEditor"></div>
+          </el-card> -->
+          <el-card
+            class="box-card"
+            v-for="item in editorItems"
+            :key="item.divId"
+          >
+            <template #header>
+              <div class="card-header">
+                <span>{{item.title}}</span>
+              </div>
+            </template>
+            <div :id="item.divId" :ref="item.divId"></div>
+          </el-card>
+        </el-col>
+      </el-row>
+    </div>
+
+    <script>
+      require.config({
+        paths: { vs: "https://cdn.staticfile.org/monaco-editor/0.19.3/min/vs" },
+      });
+      const App = {
+        data() {
+          return {
+            editor: null,
+            topic: "EzLittleChen",
+            editorItems: [
+              {
+                title: "JavaScript",
+                divId: "jsEditor",
+                language: "javascript",
+                value: `console.log("hello world");
+
+const func = () => {
+    setTimeout(function () {
+        console.log("1");
+        setTimeout(function () {
+            console.log("2");
+            setTimeout(function () {
+                console.log("3");
+            }, 2000);
+        }, 1000);
+    }, 3000);
+}
+
+func()
+
+// 
+const p = new Promise((resolve, reject) => {
+    setTimeout(function () {
+        console.log("1");
+    }, 2000)
+    if (true) {
+        resolve()
+    } else {
+        reject()
+    }
+})
+
+p.then(() => {
+    // 如果p的状态被resolve了，就进入这里
+    return new Promise((resolve, reject) => {
+        setTimeout(function () {
+            console.log("2");
+            resolve();
+        }, 3000);
+    })
+}, () => {
+    // 如果p的状态被reject
+}).then(() => {
+    setTimeout(function () {
+    console.log("3")}, 1000);
+})
+
+// 
+function func1() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log("1");
+            resolve("1");
+        }, 3000);
+    })
+}
+
+function func2() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log("2");
+            resolve("2");
+        }, 1000);
+    })
+}
+
+function func3() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log("3");
+            resolve("3");
+        }, 2000);
+    })
+}
+
+function myFunc() {
+    func1().then(res => {
+        console.log(res);
+        return func2();
+    }).then(res => {
+        console.log(res);
+        return func3();
+    }).then(res => {
+        console.log(res);
+    })
+}
+
+myFunc();`,
+              },
+              {
+                title: "C",
+                divId: "cEditor",
+                language: "c",
+                value: `#include <stdio.h>
+
+void main() {
+  int i = 1;
+  int *p;
+  p = &i;
+  printf("%d\\n", *p);
+
+  char str[] = "Hello World";
+  char *pstr = str;
+  printf("%s\\n", pstr);
+  return 0;
+}`,
+              },
+              {
+                title: "Python",
+                divId: "pythonEditor",
+                language: "python",
+                value: `from flask import Flask, request
+import json
+import logging
+from logging.handlers import RotatingFileHandler
+import os
+
+app = Flask(__name__)
+
+if not os.path.exists('./logs'):
+    os.makedirs('./logs')
+# 配置日志记录器
+file_log_handler = RotatingFileHandler('logs/noticeMiddle.log', maxBytes=1024 * 1024, backupCount=10, encoding='utf-8')
+logging_format = logging.Formatter(
+    '%(asctime)s - %(levelname)s - %(filename)s - %(funcName)s - %(lineno)s - %(message)s')
+# file_log_handler.setLevel(logging.DEBUG)
+# Logger级别默认为warning，虽然handler配置了setLevel，但是仍取两者之间最高级别的配置，需要通过下面方式调整级别
+logging.root.setLevel(logging.INFO)
+file_log_handler.setFormatter(logging_format)
+app.logger.addHandler(file_log_handler)
+
+@app.route('/', methods=['POST'])
+def send():
+    try:
+        data = json.loads(request.data)
+        return {"code": 200, "status": "ok", "msg": "success"}
+    except Exception as e:
+        app.logger.error(e)
+        return {"code": 500, "status": "error", "msg": "error"}
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080, debug=True)`,
+              },
+              {
+                title: "Shell",
+                divId: "shellEditor",
+                language: "shell",
+                value: `#!/bin/bash
+
+function oneProcess(){
+    num=$1
+    sleep $num
+    echo $num
+}
+
+function mainProcess(){
+
+    for i in {1..5};
+    do
+    {
+        echo main $i
+        oneProcess $i
+    } &
+    done
+    echo mainProcess done
+}
+
+mainProcess
+wait`,
+              },
+              {
+                title: "Golang",
+                divId: "goEditor",
+                language: "go",
+                value: `package main
 
 import (
 	"fmt"
@@ -70,6 +306,148 @@ func userMsg() {
 
 // 单个进程
 func oneProcess(num int) {
-	time.Sleep(time.Microsecond * 100 * time.Duration(num))
+	time.Sleep(time.Microsecond * time.Duration(num*100))
 	fmt.Printf("sleep %d microseconds\n", num*100)
-}
+}`,
+              },
+              {
+                title: "SQL",
+                divId: "sqlEditor",
+                language: "sql",
+                value: `/* 推荐工具: https://github.com/liyupi/sql-generator */
+
+SELECT 
+	asset_server.id,
+	asset_server.instance_id,
+	hostname,
+	public_ip,
+	private_ip,
+	idc,
+	region,
+	tags,
+	asset_server.update_time,
+	os_type,
+	instance_state,
+	instance_charge_type
+FROM
+	asset_server
+LEFT JOIN asset_server_detail ON
+	asset_server.instance_id = asset_server_detail.instance_id
+WHERE
+	asset_server.instance_id IN
+                (
+	SELECT
+		server_id
+	FROM
+		asset_server_tag
+	WHERE
+		tag_id IN (
+		select
+			asset_tag.id
+		from
+			asset_tag
+		where
+			tag_name in ("tag1", "tag2"))
+	GROUP BY
+		server_id
+	HAVING
+		COUNT(server_id) = 2)
+	AND is_deleted = 0`,
+              },
+              {
+                title: "Dockerfile",
+                divId: "dockerfileEditor",
+                language: "dockerfile",
+                value: `FROM node:12.18.4 as builder
+
+WORKDIR /tmp
+
+COPY . /app
+
+RUN npm cache verify && \\
+    npm cache clean -f && \\
+    npm install --registry https://registry.npm.taobao.org && \\
+    npm run build
+
+FROM nginx:1.12.2
+
+WORKDIR /usr/share/nginx/html
+
+RUN rm -rf *
+
+COPY --from=builder /tmp/dist .
+COPY --from=builder /tmp/default.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]`
+              }
+            ],
+          };
+        },
+        mounted() {
+          this.editorItems.forEach((item) => {
+            // console.log(this.$refs.jsEditor);
+            // console.log(document.getElementById('jsEditor'));
+            let lineNum = item.value.split("\n").length;
+            document.getElementById(item.divId).style.height =
+              lineNum * 20 + "px";
+            const maxLength = 50;
+            if (lineNum > maxLength) {
+              document.getElementById(item.divId).style.height =
+                maxLength * 20 + "px";
+            }
+            this.createEditor(item.divId, item.language, item.value);
+          });
+          // for (item in this.editorItems) {
+          //   // console.log(document.getElementById(this.editorItems[item].divId));
+          //   let lineNum = this.editorItems[item].value.split("\n").length;
+          //   document.getElementById(this.editorItems[item].divId).style.height =
+          //     lineNum * 20 + "px";
+          //   const maxLength = 50
+          //   if (lineNum > maxLength){
+          //     document.getElementById(this.editorItems[item].divId).style.height = maxLength * 20 + "px";
+          //   }
+          //   createEditor(
+          //     this.editorItems[item].divId,
+          //     this.editorItems[item].language,
+          //     this.editorItems[item].value
+          //   );
+          // }
+        },
+        methods: {
+          createEditor(divId, language, value) {
+            require(["vs/editor/editor.main"], function () {
+              this.editor = monaco.editor.create(
+                document.getElementById(divId),
+                {
+                  language: language, // 语言
+                  value: value, // 初始值
+                  fontSize: 14, // 字体大小
+                  lineNumbers: true, // 显示行号
+                  overviewRulerBorder: false, // 显示滚动条边框
+                  scrollBeyondLastLine: false, // 滚动条滚到最底部
+                  theme: "vs", // 官方自带三种主题vs, hc-black, or vs-dark
+                  readOnly: true, // 只读
+                  minimap: {
+                    // 小地图
+                    enabled: false,
+                  },
+                  automaticLayout: true, // 自动调整编辑器大小
+                }
+              );
+            });
+          },
+        },
+      };
+      const app = Vue.createApp(App);
+      app.use(ElementPlus);
+      app.mount("#app");
+    </script>
+    <style>
+      .box-card {
+        margin-top: 30px;
+      }
+    </style>
+  </body>
+</html>
