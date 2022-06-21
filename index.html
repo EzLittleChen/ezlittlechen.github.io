@@ -66,7 +66,7 @@
                 language: "javascript",
                 value: `console.log("hello world");
 
-let func = () => {
+const func = () => {
     setTimeout(function () {
         console.log("1");
         setTimeout(function () {
@@ -81,7 +81,7 @@ let func = () => {
 func()
 
 // 
-let p = new Promise((resolve, reject) => {
+const p = new Promise((resolve, reject) => {
     setTimeout(function () {
         console.log("1");
     }, 2000)
