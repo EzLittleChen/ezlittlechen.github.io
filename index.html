@@ -455,6 +455,37 @@ CMD ["nginx", "-g", "daemon off;"]`,
           "left: " + e.clientX + "px; top: " + e.clientY + "px;";
       });
     </script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script>
+      // 欲加入AES/DES对称加解密用于身份验证
+      // const PWD = "123456"
+      const aseKey = "0123456789ABCDEF";
+      // const CryPwd = "uumWuUhkXaBpIr4kD/P+oQ=="
+
+      function Encrypto(PWD) {
+        const CryPwd = CryptoJS.AES.encrypt(
+          PWD,
+          CryptoJS.enc.Utf8.parse(aseKey),
+          {
+            mode: CryptoJS.mode.ECB,
+            padding: CryptoJS.pad.Pkcs7,
+          }
+        ).toString();
+        return CryPwd;
+      }
+
+      function Decrypto(CryPwd) {
+        const PWD = CryptoJS.AES.decrypt(
+          CryPwd,
+          CryptoJS.enc.Utf8.parse(aseKey),
+          {
+            mode: CryptoJS.mode.ECB,
+            padding: CryptoJS.pad.Pkcs7,
+          }
+        ).toString(CryptoJS.enc.Utf8);
+        return PWD;
+      }
+    </script> -->
     <style>
       .box-card {
         margin-top: 30px;
