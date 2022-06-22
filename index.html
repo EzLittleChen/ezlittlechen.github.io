@@ -14,7 +14,7 @@
     <!-- 导入组件库 -->
     <script src="https://unpkg.com/element-plus"></script>
     <script src="https://cdn.staticfile.org/monaco-editor/0.19.3/min/vs/loader.min.js"></script>
-    <title>EzLittleChen Blog</title>
+    <title>EzLittleChen</title>
   </head>
   <body>
     <div id="app">
@@ -49,6 +49,9 @@
         </el-col>
       </el-row>
     </div>
+
+    <div class="cursor1"></div>
+    <div class="cursor2"></div>
 
     <script>
       require.config({
@@ -380,8 +383,8 @@ COPY --from=builder /tmp/default.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]`
-              }
+CMD ["nginx", "-g", "daemon off;"]`,
+              },
             ],
           };
         },
@@ -444,9 +447,43 @@ CMD ["nginx", "-g", "daemon off;"]`
       app.use(ElementPlus);
       app.mount("#app");
     </script>
+    <script>
+      const cursor = document.querySelector(".cursor1");
+      const cursor2 = document.querySelector(".cursor2");
+      document.addEventListener("mousemove", function(e){
+        cursor.style.cssText = cursor2.style.cssText += "left: " + e.clientX
+        + "px; top: " + e.clientY + "px;";
+      });
+  </script>
     <style>
       .box-card {
         margin-top: 30px;
+      }
+
+      .cursor1 {
+        position: fixed;
+        width: 50px;
+        height: 50px;
+        border: 1px solid #c6c6c6;
+        border-radius: 50%;
+        left: 0;
+        top: 0;
+        pointer-events: none;
+        transform: translate(-50%, -50%);
+        transition: 0.1s;
+      }
+
+      .cursor2 {
+        position: fixed;
+        width: 8px;
+        height: 8px;
+        background-color: #c6c6c6;
+        border-radius: 50%;
+        left: 0;
+        top: 0;
+        pointer-events: none;
+        transform: translate(-50%, -50%);
+        transition: 0.15s;
       }
     </style>
   </body>
